@@ -49,4 +49,10 @@
     <string name="settings">Settings</string>
     <string name="brightness">Brightness</string>
     <string name="ringtone">Ringtone</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="history">History</string>
+    <string name="unlock">Unlock</string>
+    <string name="account">Account</string>
 </resources>

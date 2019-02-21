@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@menu/bottom_navigation_items" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
