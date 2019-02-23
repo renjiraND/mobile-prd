@@ -9,6 +9,12 @@ public class History {
     private Date date;
     private int status; //0 = Failed, 1 = Success
 
+    public History(int unlockType, Date date, int status){
+        this.unlockType = unlockType;
+        this.date = date;
+        this.status = status;
+    }
+
     public int getUnlockType() {
         return unlockType;
     }
@@ -34,7 +40,7 @@ public class History {
     }
 
     public String dateToString() {
-        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy, hh.mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, HH.mm");
         String strDate = dateFormat.format(this.date);
         return strDate;
     }
