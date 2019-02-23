@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_margin="20dp"
-        card_view:cardCornerRadius="8dp">
+        card_view:cardCornerRadius="8dp"
+        card_view:cardElevation="2dp">
 
         <ImageView
             card_view:srcCompat="@drawable/ic_game"

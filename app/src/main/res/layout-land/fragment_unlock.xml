@@ -15,7 +15,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_margin="10dp"
-        card_view:cardCornerRadius="8dp">
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
 
         <ImageView
             card_view:srcCompat="@drawable/ic_game"
@@ -40,7 +41,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:layout_margin="10dp"
-        card_view:cardCornerRadius="8dp">
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
 
         <ImageView
             card_view:srcCompat="@drawable/ic_key"
