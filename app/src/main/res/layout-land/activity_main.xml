@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:layout_margin="@dimen/margin_potrait">
+    android:layout_margin="@dimen/margin_landscape">
 
     <FrameLayout
         android:id="@+id/frame_layout"
