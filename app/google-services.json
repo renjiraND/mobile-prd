@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "120247446532",
+    "firebase_url": "https://bukalock-9e58b.firebaseio.com",
+    "project_id": "bukalock-9e58b",
+    "storage_bucket": "bukalock-9e58b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120247446532:android:2fc8c6700f7cd46e",
+        "android_client_info": {
+          "package_name": "com.renrairah.bukalock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120247446532-i509us69m5s59lsnpnvro44f27i6dprt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.renrairah.bukalock",
+            "certificate_hash": "76754e7a09e9130f1f93b886629654bd59091a2a"
+          }
+        },
+        {
+          "client_id": "120247446532-00cguke8n2jihcicqh148vgkblhtiq55.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7kGMDERNK6uSbFYQHMUpzwK73IRNkR7o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120247446532-00cguke8n2jihcicqh148vgkblhtiq55.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
