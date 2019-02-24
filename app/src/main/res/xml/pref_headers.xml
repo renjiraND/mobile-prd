@@ -1,0 +1,15 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- These settings headers are only used on tablets. -->
+
+    <header
+        android:fragment="com.renrairah.bukalock.SettingsActivity$BrightnessFragment"
+        android:icon="@drawable/ic_brightness"
+        android:title="@string/brightness" />
+
+    <header
+        android:fragment="com.renrairah.bukalock.SettingsActivity$RingtoneFragment"
+        android:icon="@drawable/ic_ringtone"
+        android:title="@string/ringtone" />
+
+</preference-headers>

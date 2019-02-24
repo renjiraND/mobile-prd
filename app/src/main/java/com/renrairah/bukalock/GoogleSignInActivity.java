@@ -1,11 +1,16 @@
 package com.renrairah.bukalock;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,7 +35,6 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
-    public static final String EXTRA_MESSAGE = "com.renrairah.bukalock.MESSAGE";
 
 
     // [START declare_auth]
@@ -38,20 +42,28 @@ public class GoogleSignInActivity extends BaseActivity implements
     // [END declare_auth]
 
     private GoogleSignInClient mGoogleSignInClient;
-    private TextView mDetailTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_google);
+        if(Build.VERSION.SDK_INT >= 21){
+            Window window = this.getWindow();
 
-        // Views
-        mDetailTextView = findViewById(R.id.detail);
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // finally change the color
+            window.setStatusBarColor(0xFF913131);
+        }
 
         // Button listeners
         findViewById(R.id.signInButton).setOnClickListener(this);
         findViewById(R.id.signOutButton).setOnClickListener(this);
-        findViewById(R.id.disconnectButton).setOnClickListener(this);
 
         // [START config_signin]
         // Configure Google Sign In
@@ -73,6 +85,10 @@ public class GoogleSignInActivity extends BaseActivity implements
     @Override
     public void onStart() {
         super.onStart();
+
+        //abis implement signout di main, apus ini
+        signOut();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
@@ -137,6 +153,7 @@ public class GoogleSignInActivity extends BaseActivity implements
     private void loginOk(FirebaseUser user){
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("userdata", user);
+        signOut();
         startActivity(intent);
         finish();
     }
@@ -162,27 +179,11 @@ public class GoogleSignInActivity extends BaseActivity implements
                 });
     }
 
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google revoke access
-        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
-    }
-
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
             loginOk(user);
         } else {
-            mDetailTextView.setText(null);
-
             findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
             findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
         }
@@ -195,8 +196,6 @@ public class GoogleSignInActivity extends BaseActivity implements
             signIn();
         } else if (i == R.id.signOutButton) {
             signOut();
-        } else if (i == R.id.disconnectButton) {
-            revokeAccess();
         }
     }
 }
