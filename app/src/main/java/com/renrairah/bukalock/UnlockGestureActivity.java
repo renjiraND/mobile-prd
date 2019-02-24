@@ -61,7 +61,7 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
             imgStatus.setImageResource(R.drawable.ic_forward);
         }
 
-        if (((abs(y) >= 3) && (z >= 10)) && (status == 1)){
+        if (((y >= 3) && (z >= 10)) && (status == 1)){
             status = 2;
             txtStatus.setText("Rotate your phone to the left");
             imgStatus.setImageResource(R.drawable.ic_rotate);
