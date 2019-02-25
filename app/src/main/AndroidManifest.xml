@@ -31,14 +31,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.renrairah.bukalock.MainActivity" />
         </activity>
-        <activity
-            android:name=".GoogleSignInActivity"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <!--<activity-->
+            <!--android:name=".GoogleSignInActivity"-->
+            <!--android:label="@string/app_name">-->
+            <!---->
+        <!--</activity>-->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -46,6 +43,10 @@
             <meta-data
                 android:value=".GoogleSignInActivity"
                 android:name="android.support.PARENT_ACTIVITY"/>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
