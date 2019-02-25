@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textSize="24dp"
-            android:text="km from home"/>
+            android:text=" km from home"/>
     </LinearLayout>
 
     <TextView

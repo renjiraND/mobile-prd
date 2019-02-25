@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ public class UnlockFragment extends Fragment {
         gamesCardView = (CardView) rootView.findViewById(R.id.card_games);
         motionCardView = (CardView) rootView.findViewById(R.id.card_motion);
 
+        int permission = 0;
+
         // Get Langitude and Longitude
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -61,8 +64,8 @@ public class UnlockFragment extends Fragment {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(getActivity(), "You need to enable permissions to display location !", Toast.LENGTH_SHORT).show();
-            return this.getView();
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, permission);
         }
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
@@ -72,7 +75,7 @@ public class UnlockFragment extends Fragment {
                         if (location != null) {
                             // HTTP URL CONNECTION
 
-                            String url = "api.openweathermap.org/data/2.5/weather?lat="+ location.getLatitude() + "&lon=" + location.getLongitude() +"&appid=e1fdfc163ccafda97f4286d04826bf85";
+                            String url = "http://api.openweathermap.org/data/2.5/weather?lat="+ location.getLatitude() + "&lon=" + location.getLongitude() +"&appid=e1fdfc163ccafda97f4286d04826bf85";
 
                             JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                                 @Override
@@ -87,19 +90,21 @@ public class UnlockFragment extends Fragment {
                                         String city = response.getString("name");
 
                                         double temp_int = Double.parseDouble(temp);
-                                        double centi = (temp_int - 32) /1.8000;
+                                        double centi = temp_int - 273;
                                         centi = Math.round(centi);
                                         int temperature = (int)centi;
 
                                         // Update Weather and Temperature
                                         TextView mWeather = (TextView) getActivity().findViewById(R.id.weather);
                                         mWeather.setText(toTitleCase(weather));
+                                        Log.d("Weather :", toTitleCase(weather));
                                         TextView mTemperature = (TextView) getActivity().findViewById(R.id.temperature);
-                                        mTemperature.setText(temperature);
+                                        String city_temp = city + ", " + String.valueOf(temperature) +"°";
+                                        Log.d("City, temperature: ", String.valueOf(city_temp));
+                                        mTemperature.setText(city_temp);
 
 
-                                    }catch(JSONException e)
-                                    {
+                                    }catch(JSONException e){
                                         e.printStackTrace();
                                     }
 
