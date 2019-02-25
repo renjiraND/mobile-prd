@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
@@ -34,9 +36,11 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
     private SensorManager sensorManager;
     private TextView txtStatus, txtLoc, txtDistance, txtKm;
     private ImageView imgStatus;
-    private int status = -1; // -1 = idle, 0 = on the location, 1 = flat position, 2 = accelerated forward and waiting to be rotated, 2 = rotated and unlocked
+    private int status = -1; // -1 = idle, 0 = on the location, 1 = flat position, 2 = accelerated forward and waiting to be rotated, 3 = rotated and unlocked, 4 = wrong email
     private Vibrator v;
     private FusedLocationProviderClient fusedLocationClient;
+    private FirebaseDatabase database;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
                 sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
                 SensorManager.SENSOR_DELAY_NORMAL);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        database = FirebaseDatabase.getInstance();
+        mDatabase = database.getReference();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         int permission = 0;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
