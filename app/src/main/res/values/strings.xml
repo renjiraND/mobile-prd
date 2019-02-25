@@ -66,5 +66,8 @@
     <string name="history">History</string>
     <string name="unlock">Unlock</string>
     <string name="account">Account</string>
+    <string name="unlock_games">Unlock key by playing games.</string>
+    <string name="unlock_motion">Unlock key by moving your phone.</string>
     <string name="google_title_text">Google Sign In</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import java.util.Date;
 import java.util.LinkedList;
 
 
@@ -40,8 +40,25 @@ public class HistoryFragment extends Fragment {
         historyList = new LinkedList<>();
         adapter = new HistoryListAdapter(getActivity(), historyList);
         recyclerView.setAdapter(adapter);
+        createListData();
         // Inflate the layout for this fragment
         return rootView;
     }
 
+    private void createListData() {
+        Date date = new Date();
+        History history = new History(2,date,1);
+        historyList.add(history);
+        history = new History(1,date,0);
+        historyList.add(history);
+        history = new History(2,date,1);
+        historyList.add(history);
+        history = new History(1,date,1);
+        historyList.add(history);
+        history = new History(1,date,0);
+        historyList.add(history);
+        history = new History(3,date,1);
+        historyList.add(history);
+        adapter.notifyDataSetChanged();
+    }
 }

@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 *.iml
 .gradle
 /local.properties
@@ -9,6 +11,7 @@
 /.idea/assetWizardSettings.xml
 /.idea/vcs.xml
 /.idea/gradle.xml
+>>>>>>> 2f582905c2ae5e296e9ef3eae1cee2ba2117208b
 .DS_Store
 # Built application files
 *.apk
@@ -64,6 +67,12 @@ captures/
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild
 
+<<<<<<< HEAD
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+=======
+>>>>>>> 2f582905c2ae5e296e9ef3eae1cee2ba2117208b
 # Freeline
 freeline.py
 freeline/
