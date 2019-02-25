@@ -86,9 +86,6 @@ public class GoogleSignInActivity extends BaseActivity implements
     public void onStart() {
         super.onStart();
 
-        //abis implement signout di main, apus ini
-        signOut();
-
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
@@ -134,7 +131,7 @@ public class GoogleSignInActivity extends BaseActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            loginOk(user);
+                            loginOk();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -150,10 +147,8 @@ public class GoogleSignInActivity extends BaseActivity implements
     }
     // [END auth_with_google]
 
-    private void loginOk(FirebaseUser user){
+    private void loginOk(){
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("userdata", user);
-        signOut();
         startActivity(intent);
         finish();
     }
@@ -165,24 +160,10 @@ public class GoogleSignInActivity extends BaseActivity implements
     }
     // [END signin]
 
-    private void signOut() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
-    }
-
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            loginOk(user);
+            loginOk();
         } else {
             findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
             findViewById(R.id.signOutAndDisconnect).setVisibility(View.GONE);
@@ -194,8 +175,6 @@ public class GoogleSignInActivity extends BaseActivity implements
         int i = v.getId();
         if (i == R.id.signInButton) {
             signIn();
-        } else if (i == R.id.signOutButton) {
-            signOut();
         }
     }
 }
