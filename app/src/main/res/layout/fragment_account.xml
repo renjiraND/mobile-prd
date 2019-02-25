@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AccountFragment"
-    android:layout_margin="@dimen/margin_potrait"
-    android:weightSum="15"
+    android:padding="15dp"
+    android:weightSum="2"
+    android:layout_margin="@dimen/margin_landscape"
     android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:id="@+id/user_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_weight="10"
+        android:layout_weight="1"
         android:padding="10dp"
-        android:src="@drawable/ic_profile"/>
+        app:srcCompat="@drawable/ic_profile"/>
 
-    <TextView
-        android:id="@+id/user_name"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Name"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="20dp"/>
+        android:weightSum="4"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <TextView
-        android:id="@+id/user_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="E-mail"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="20dp"/>
 
-    <TextView
-        android:id="@+id/user_status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Status"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="20dp"/>
-    <TextView
-        android:id="@+id/user_rfidcode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RFID"
-        android:layout_weight="1"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="E-mail"
+            android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/user_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/user_rfidcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RFID"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="20dp"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,6 +1,4 @@
 package com.renrairah.bukalock;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,9 +12,7 @@ import android.view.ViewGroup;
  * A simple {@link Fragment} subclass.
  */
 public class UnlockFragment extends Fragment {
-
     private CardView gamesCardView, motionCardView;
-
     public static UnlockFragment newInstance() {
         UnlockFragment fragment = new UnlockFragment();
         return fragment;

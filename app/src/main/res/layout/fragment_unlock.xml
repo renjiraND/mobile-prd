@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:weightSum="2"
-    android:padding="@dimen/margin_potrait"
+    android:padding="@dimen/margin_landscape"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -14,14 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_margin="20dp"
-        card_view:cardCornerRadius="8dp"
-        card_view:cardElevation="2dp">
+        android:layout_margin="10dp"
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
 
         <ImageView
             card_view:srcCompat="@drawable/ic_game"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <TextView
             android:gravity="bottom"
@@ -40,8 +40,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_margin="20dp"
-        card_view:cardCornerRadius="8dp">
+        android:layout_margin="10dp"
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="@dimen/card_view_elevation">
 
         <ImageView
             card_view:srcCompat="@drawable/ic_key"
@@ -50,7 +51,7 @@
 
         <TextView
             android:gravity="bottom"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/unlock_motion"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -62,5 +61,4 @@ public class HistoryFragment extends Fragment {
         historyList.add(history);
         adapter.notifyDataSetChanged();
     }
-
 }

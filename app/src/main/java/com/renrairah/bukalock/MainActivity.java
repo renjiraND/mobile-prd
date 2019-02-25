@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+        Intent intent = getIntent();
+        FirebaseUser user = (FirebaseUser) intent.getSerializableExtra("userdata");
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.navigation);
         bottomNavigationView.setSelectedItemId(R.id.action_unlock);
@@ -42,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-
         if (savedInstanceState == null) {
             // Do your oncreate stuff because there is no bundle
             //Manually displaying the first fragment - one time only
