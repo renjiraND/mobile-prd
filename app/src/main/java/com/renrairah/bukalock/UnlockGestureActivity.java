@@ -1,9 +1,13 @@
 package com.renrairah.bukalock;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +25,7 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
     private TextView txtStatus;
     private ImageView imgStatus;
     private int status = 0; // 0 = idle, 1 = flat position, 2 = accelerated forward and waiting to be rotated, 2 = rotated and unlocked
+    private Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,7 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
                 SensorManager.SENSOR_DELAY_NORMAL);
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
@@ -59,12 +65,24 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
             status = 1;
             txtStatus.setText("Move your phone forward");
             imgStatus.setImageResource(R.drawable.ic_forward);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(500);
+            }
         }
 
         if (((y >= 3) && (z >= 10)) && (status == 1)){
             status = 2;
             txtStatus.setText("Rotate your phone to the left");
             imgStatus.setImageResource(R.drawable.ic_rotate);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(500);
+            }
         }
     }
 
@@ -80,6 +98,12 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
             txtStatus.setText("Door unlocked!");
             imgStatus.setImageResource(R.drawable.ic_unlock);
             sensorManager.unregisterListener(this);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                v.vibrate(1000);
+            }
         }
     }
 
