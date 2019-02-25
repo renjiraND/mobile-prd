@@ -57,6 +57,7 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
                 SensorManager.SENSOR_DELAY_NORMAL);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        int permission = 0;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -65,8 +66,8 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Toast.makeText(this, "You need to enable permissions to display location !", Toast.LENGTH_SHORT).show();
-            return;
+            ActivityCompat.requestPermissions(this,
+                new String[] {Manifest.permission.ACCESS_COARSE_LOCATION}, permission);
         }
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -78,16 +79,17 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
                             txtLoc.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
                             Location home = new Location("point B");
 
-                            home.setLatitude(-6.1022212);
-                            home.setLongitude(107.765353);
+                            home.setLatitude(-6.882882);
+                            home.setLongitude(107.622461);
 
                             float distance = home.distanceTo(location)/1000;
-                            txtDistance.setText(String.valueOf(distance));
-                            if ((distance <= 0.5f) && (status == -1)){
+                            txtDistance.setText(String.format("%.2f",distance));
+                            if ((distance <= 1f) && (status == -1)){
                                 status = 0;
                                 txtStatus.setText("Lay your phone");
                                 txtDistance.setVisibility(View.GONE);
                                 txtKm.setVisibility(View.GONE);
+                                txtLoc.setVisibility(View.GONE);
                                 imgStatus.setImageResource(R.drawable.ic_flattening);
                             }
                         }
