@@ -60,7 +60,7 @@ public class AccountFragment extends Fragment {
         mUserName.setText(currentUser.getDisplayName());
         mUserEmail.setText(currentUser.getEmail());
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false);
+        return rootView;
     }
 
 }

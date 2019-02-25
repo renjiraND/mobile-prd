@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="weather"
+                android:text=""
                 android:textAlignment="center"
                 android:textSize="@dimen/weather_temperature_fontsize" />
 
@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="temperature"
+                android:text=""
                 android:textAlignment="center"
                 android:gravity="center"
                 android:textSize="@dimen/weather_temperature_fontsize" />
