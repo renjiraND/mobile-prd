@@ -79,8 +79,8 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
                             txtLoc.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
                             Location home = new Location("point B");
 
-                            home.setLatitude(-6.882882);
-                            home.setLongitude(107.622461);
+                            home.setLatitude(-6.864864);
+                            home.setLongitude(107.618381);
 
                             float distance = home.distanceTo(location)/1000;
                             txtDistance.setText(String.format("%.2f",distance));
