@@ -64,6 +64,7 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
         mDatabase = database.getReference();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         int permission = 0;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -83,6 +84,7 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
                         if (location != null) {
                             // Logic to handle location object
                             txtLoc.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
+
                             Location home = new Location("point B");
 
                             home.setLatitude(-6.864864);
