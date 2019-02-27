@@ -3,6 +3,8 @@ package com.renrairah.bukalock;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +59,29 @@ public class HistoryFragment extends Fragment {
         historyList = new LinkedList<>();
         adapter = new HistoryListAdapter(getActivity(), historyList);
         recyclerView.setAdapter(adapter);
-        createListData();
+        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String email = currentUser.getEmail();
+        Query queryToGetData = dbRef.child("users")
+                .orderByChild("email").equalTo(email);
+        final ProgressDialog Dialog = new ProgressDialog(getActivity());
+        Dialog.setMessage("Please wait...");
+        Dialog.show();
+        queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    createListData();
+                }
+                Dialog.hide();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         // Inflate the layout for this fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
@@ -70,37 +97,55 @@ public class HistoryFragment extends Fragment {
         Dialog.setMessage("Please wait...");
         Dialog.show();
         Query historyQuery = dbRef.orderByChild("date");
-        historyQuery.addValueEventListener(new ValueEventListener() {
+//        historyQuery.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+//                        History history = messageSnapshot.getValue(History.class);
+//                        Log.d(TAG, "got history " + history.dateToString());
+//                        historyList.add(history);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                    Dialog.hide();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Failed to read value
+//            }
+//        });
+        dbRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                        History history = messageSnapshot.getValue(History.class);
-                        Log.d(TAG, "got history " + history.dateToString());
-                        historyList.add(history);
-                        adapter.notifyDataSetChanged();
-                    }
-                    Dialog.hide();
-                }
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                History history = dataSnapshot.getValue(History.class);
+                Log.d(TAG, "got history " + history.dateToString());
+                historyList.add(history);
+                adapter.notifyDataSetChanged();
+                Dialog.hide();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-//        History history = new History(2,date,1);
-//        historyList.add(history);
-//        history = new History(1,date,0);
-//        historyList.add(history);
-//        history = new History(2,date,1);
-//        historyList.add(history);
-//        history = new History(1,date,1);
-//        historyList.add(history);
-//        history = new History(1,date,0);
-//        historyList.add(history);
-//        history = new History(3,date,1);
-//        historyList.add(history);
         adapter.notifyDataSetChanged();
     }
 }
