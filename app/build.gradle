@@ -38,6 +38,7 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.github.yesidlazaro:GmailBackground:1.2.0'
 
     implementation 'com.google.firebase:firebase-database:16.0.6'
 
