@@ -20,6 +20,14 @@
             android:enabled="true"
             android:exported="true">
         </service>
+        <service
+            android:name=".NotifService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.actions"

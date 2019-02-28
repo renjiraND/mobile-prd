@@ -2,10 +2,12 @@ package com.renrairah.bukalock;
 
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.method.BaseKeyListener;
 import android.util.Log;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
@@ -27,7 +29,7 @@ import static java.lang.Math.abs;
 
 public class EmailBackgroundService extends Service {
     private boolean emailRegistered;
-    private boolean isNewHistory;
+    private BackgroundMail format;
     private String useremail;
 
     @Override
@@ -44,6 +46,8 @@ public class EmailBackgroundService extends Service {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         useremail = currentUser.getEmail();
+
+        format = formatEmail(useremail, EmailBackgroundService.this);
 
         final DatabaseReference dbRefUsers = FirebaseDatabase.getInstance().getReference().child("users");
         Query query = dbRefUsers.orderByChild("email").equalTo(useremail);
@@ -64,16 +68,13 @@ public class EmailBackgroundService extends Service {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        isNewHistory = false;
         super.onCreate();
         sendWarningEmail();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //onTaskRemoved(intent);
         Log.d(TAG, "Service on start command");
-        //sendWarningEmail();
         return START_STICKY;
     }
 
@@ -96,17 +97,16 @@ public class EmailBackgroundService extends Service {
                 long difference = abs(date.getTime() - now.getTime());
                 Log.d(TAG, "Beda waktu : " + difference);
                 Log.d(TAG, myKey);
-                isNewHistory = false;
                 if (prevChildKey == null || myKey == prevChildKey){
-                    isNewHistory = false;
                     Log.d(TAG, "Not kirim email");
                 } else {
                     Log.d(TAG, prevChildKey);
                     int status = newHistory.getStatus();
-                    if (status == 0 && difference < 5000) {
-                        isNewHistory = true;
+                    if (status == 0 && difference < 5000 && emailRegistered) {
+                        Log.d(TAG, "Harus kirim email");
+                        //format.send();
                     } else {
-                        isNewHistory = false;
+                        Log.d(TAG, "Not kirim email");
                     }
                 }
             }
@@ -122,34 +122,17 @@ public class EmailBackgroundService extends Service {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
-        });;
-        Log.d(TAG, "New History : " + isNewHistory);
-        if (emailRegistered && isNewHistory){
-            sendEmail(useremail);
-        }
+        });
     }
-    public void sendEmail(String useremail){
+
+    public BackgroundMail formatEmail(String useremail, Context ctx){
         Log.d(TAG, "Masuk sendEmail");
-        BackgroundMail.newBuilder(this)
-            .withUsername("ifbukalock@gmail.com")
-            .withPassword("bukalock135")
-            .withMailto(useremail)
-            .withSubject("BukaLock Warning!")
-            .withBody("Warning! Someone unauthorized just trying to open your lock!")
-            .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                @Override
-                public void onSuccess() {
-                    //do some magic
-                    Log.d(TAG, "Berhasil");
-                }
-            })
-            .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                @Override
-                public void onFail() {
-                    //do some magic
-                    Log.d(TAG, "Gagal");
-                }
-            })
-            .send();
+        BackgroundMail bm = new BackgroundMail(ctx);
+        bm.setGmailUserName("ifbukalock@gmail.com");
+        bm.setGmailPassword("bukalock135");
+        bm.setMailTo(useremail);
+        bm.setFormSubject("BukaLock Warning!");
+        bm.setFormBody("Warning! Someone unauthorized just trying to open your lock!");
+        return bm;
     }
 }
