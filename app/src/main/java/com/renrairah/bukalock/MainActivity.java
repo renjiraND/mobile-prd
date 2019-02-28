@@ -1,7 +1,9 @@
 package com.renrairah.bukalock;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +26,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -92,6 +96,12 @@ public class MainActivity extends AppCompatActivity {
             transaction.commit();
             startService(new Intent(this, EmailBackgroundService.class));
         }
+
+        SharedPreferences pref = getSharedPreferences("<com.renrairah.bukalock>", Context.MODE_PRIVATE);
+        pref.edit().remove("img").commit();
+        pref.edit().remove("status").commit();
+        pref.edit().remove("text").commit();
+        Log.d(TAG, "Create Main Activity");
     }
 
     @Override
