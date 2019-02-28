@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">BukaLock</string>
+    <string name="loading">Loading...</string>
+
+    <string name="label_google_sign_in">Login</string>
+
+    <string name="hint_user_id">User ID</string>
+    <string name="sign_in">Sign In</string>
+    <string name="send_link">Send Link</string>
+    <string name="sign_out">Sign Out</string>
+
+    <string name="id_fmt">User ID: %s</string>
+    <string name="email_fmt">Email: %s</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -57,4 +68,6 @@
     <string name="account">Account</string>
     <string name="unlock_games">Unlock key by playing games.</string>
     <string name="unlock_motion">Unlock key by moving your phone.</string>
+    <string name="google_title_text">Google Sign In</string>
+    <string name="logout">Logout</string>
 </resources>
