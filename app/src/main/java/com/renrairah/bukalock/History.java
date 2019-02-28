@@ -2,24 +2,33 @@ package com.renrairah.bukalock;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
 public class History {
     private int unlockType; //1 = Gesture, 2 = Games, 3 = Card
-    private Date date;
+    private long date;
     private int status; //0 = Failed, 1 = Success
 
-    public History(int unlockType, Date date, int status){
+    public History(){}
+
+    public History(int unlockType, long date, int status){
         this.unlockType = unlockType;
         this.date = date;
         this.status = status;
+    }
+
+    public History(History history){
+        this.unlockType = history.getUnlockType();
+        this.date = history.getDate();
+        this.status = history.getStatus();
     }
 
     public int getUnlockType() {
         return unlockType;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
@@ -31,7 +40,7 @@ public class History {
         this.unlockType = unlockType;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -41,7 +50,7 @@ public class History {
 
     public String dateToString() {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy, HH.mm");
-        String strDate = dateFormat.format(this.date);
+        String strDate = dateFormat.format(new Date(this.date));
         return strDate;
     }
 

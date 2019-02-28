@@ -1,6 +1,7 @@
 package com.renrairah.bukalock;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -22,8 +23,14 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -36,7 +43,8 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
     private SensorManager sensorManager;
     private TextView txtStatus, txtLoc, txtDistance, txtKm;
     private ImageView imgStatus;
-    private int status = -1; // -1 = idle, 0 = on the location, 1 = flat position, 2 = accelerated forward and waiting to be rotated, 3 = rotated and unlocked, 4 = wrong email
+    private int status = -1; // -1 = idle, 0 = on the location, 1 = flat position, 2 = accelerated forward and waiting to be rotated, 3 = rotated and unlocked, 4 = failed
+
     private Vibrator v;
     private FusedLocationProviderClient fusedLocationClient;
     private FirebaseDatabase database;
@@ -87,8 +95,8 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
 
                             Location home = new Location("point B");
 
-                            home.setLatitude(-6.864864);
-                            home.setLongitude(107.618381);
+                            home.setLatitude(-6.9009);
+                            home.setLongitude(107.62655);
 
                             float distance = home.distanceTo(location)/1000;
                             txtDistance.setText(String.format("%.2f",distance));
@@ -155,9 +163,41 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
         float z = values[2];
 
         if ((y < -2.5f) && (status == 2)){
-            status = 3;
-            txtStatus.setText("Door unlocked!");
-            imgStatus.setImageResource(R.drawable.ic_unlock);
+            final ProgressDialog Dialog = new ProgressDialog(this);
+            Dialog.setMessage("Please wait...");
+            Dialog.show();
+            final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            String email = currentUser.getEmail();
+            Query queryToGetData = dbRef.child("users")
+                    .orderByChild("email").equalTo(email);
+            queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        String historyId = dbRef.child("history").push().getKey();
+                        History history = new History(1,System.currentTimeMillis(),1);
+                        dbRef.child("history").child(historyId).setValue(history);
+                        status = 3;
+                        txtStatus.setText("Door unlocked!");
+                        imgStatus.setImageResource(R.drawable.ic_unlock);
+                    } else {
+                        String historyId = dbRef.child("history").push().getKey();
+                        History history = new History(1,System.currentTimeMillis(),0);
+                        dbRef.child("history").child(historyId).setValue(history);
+                        status = 4;
+                        txtStatus.setText("You aren't eligible to unlock this door");
+                        imgStatus.setImageResource(R.drawable.ic_cancel);
+                    }
+                    Dialog.hide();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
             sensorManager.unregisterListener(this);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));

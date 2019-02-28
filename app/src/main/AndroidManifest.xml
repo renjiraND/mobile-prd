@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -19,7 +18,8 @@
         <service
             android:name=".EmailBackgroundService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+        </service>
 
         <meta-data
             android:name="com.google.android.actions"
