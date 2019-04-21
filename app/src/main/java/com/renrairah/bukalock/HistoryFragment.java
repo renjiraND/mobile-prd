@@ -96,26 +96,26 @@ public class HistoryFragment extends Fragment {
         final ProgressDialog Dialog = new ProgressDialog(getActivity());
         Dialog.setMessage("Please wait...");
         Dialog.show();
-//        Query historyQuery = dbRef.orderByChild("date");
-//        historyQuery.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-//                        History history = messageSnapshot.getValue(History.class);
-//                        Log.d(TAG, "got history " + history.dateToString());
-//                        historyList.add(history);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                    Dialog.hide();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Failed to read value
-//            }
-//        });
+        Query historyQuery = dbRef.orderByChild("date");
+        historyQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                        History history = messageSnapshot.getValue(History.class);
+                        Log.d(TAG, "got history " + history.dateToString());
+                        historyList.add(history);
+                        adapter.notifyDataSetChanged();
+                    }
+                    Dialog.hide();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+            }
+        });
         dbRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

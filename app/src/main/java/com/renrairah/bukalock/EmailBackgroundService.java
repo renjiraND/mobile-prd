@@ -21,14 +21,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.util.Date;
-
-import static android.app.PendingIntent.getActivities;
-import static android.app.PendingIntent.getActivity;
 import static android.support.constraint.Constraints.TAG;
 import static java.lang.Math.abs;
 
 public class EmailBackgroundService extends Service {
-    private boolean emailRegistered;
     private BackgroundMail format;
     private String useremail;
 
@@ -41,26 +37,24 @@ public class EmailBackgroundService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         Log.d(TAG, "Service created");
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         useremail = currentUser.getEmail();
 
-        format = formatEmail(useremail, EmailBackgroundService.this);
-
         final DatabaseReference dbRefUsers = FirebaseDatabase.getInstance().getReference().child("users");
         Query query = dbRefUsers.orderByChild("email").equalTo(useremail);
-        Log.d(TAG, "Email : " + useremail);
+//        Log.d(TAG, "Email : " + useremail);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Log.d(TAG, "Ada user data snapshot");
-                    emailRegistered = true;
+                    checkSendEmail();
                 } else {
                     Log.d(TAG, "Tidak ada user data snapshot");
-                    emailRegistered = false;
                 }
             }
 
@@ -68,8 +62,6 @@ public class EmailBackgroundService extends Service {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        super.onCreate();
-        sendWarningEmail();
     }
 
     @Override
@@ -84,7 +76,7 @@ public class EmailBackgroundService extends Service {
         super.onDestroy();
     }
 
-    private void sendWarningEmail(){
+    private void checkSendEmail(){
         final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("history");
         Query query = dbRef.orderByKey().limitToLast(2);
         query.addChildEventListener(new ChildEventListener() {
@@ -96,15 +88,16 @@ public class EmailBackgroundService extends Service {
                 Date date = new Date(newHistory.getDate());
                 long difference = abs(date.getTime() - now.getTime());
                 Log.d(TAG, "Beda waktu : " + difference);
-                Log.d(TAG, myKey);
+                Log.d(TAG, "Key gue :" + myKey);
                 if (prevChildKey == null || myKey == prevChildKey){
                     Log.d(TAG, "Not kirim email");
                 } else {
-                    Log.d(TAG, prevChildKey);
                     int status = newHistory.getStatus();
-                    if (status == 0 && difference < 5000 && emailRegistered) {
+                    Log.d(TAG, "Key anak: " + prevChildKey);
+                    Log.d(TAG, "Status: " + status);
+                    if (status == 0 && difference < 5000) {
                         Log.d(TAG, "Harus kirim email");
-                        //format.send();
+                        sendWarningEmail();
                     } else {
                         Log.d(TAG, "Not kirim email");
                     }
@@ -125,14 +118,27 @@ public class EmailBackgroundService extends Service {
         });
     }
 
-    public BackgroundMail formatEmail(String useremail, Context ctx){
+    public void sendWarningEmail(){
         Log.d(TAG, "Masuk sendEmail");
-        BackgroundMail bm = new BackgroundMail(ctx);
-        bm.setGmailUserName("ifbukalock@gmail.com");
-        bm.setGmailPassword("bukalock135");
-        bm.setMailTo(useremail);
-        bm.setFormSubject("BukaLock Warning!");
-        bm.setFormBody("Warning! Someone unauthorized just trying to open your lock!");
-        return bm;
+        BackgroundMail.newBuilder(this)
+            .withUsername("ifbukalock@gmail.com")
+            .withPassword("bukalock135")
+            .withMailto(this.useremail)
+            .withType(BackgroundMail.TYPE_PLAIN)
+            .withSubject("BukaLock Warning!")
+            .withBody("Warning! Someone unauthorized just trying to open your lock!")
+            .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                @Override
+                public void onSuccess() {
+                    //do some magic
+                }
+            })
+            .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                @Override
+                public void onFail() {
+                    //do some magic
+                }
+            })
+            .send();
     }
 }
