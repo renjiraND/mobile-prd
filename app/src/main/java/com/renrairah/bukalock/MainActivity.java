@@ -117,7 +117,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Google sign out
         mGoogleSignInClient.signOut();
-        finish();
+        finishAffinity();
+        startActivity(new Intent(this, GoogleSignInActivity.class));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
