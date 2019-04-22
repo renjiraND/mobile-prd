@@ -108,8 +108,8 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
 
                             Location home = new Location("point B");
 
-                            home.setLatitude(-6.88288288);
-                            home.setLongitude(107.622461);
+                            home.setLatitude(-6.900900900900901);
+                            home.setLongitude(107.60840298);
                             status = prefs.getInt( "status" , -1);
                             Log.d(TAG, "SharedPref 1: " + prefs.getInt( "status",-1));
 

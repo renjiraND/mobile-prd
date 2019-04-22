@@ -25,8 +25,8 @@ import static android.support.constraint.Constraints.TAG;
 import static java.lang.Math.abs;
 
 public class EmailBackgroundService extends Service {
-    private BackgroundMail format;
     private String useremail;
+    private Context context = this;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -97,7 +97,7 @@ public class EmailBackgroundService extends Service {
                     Log.d(TAG, "Status: " + status);
                     if (status == 0 && difference < 5000) {
                         Log.d(TAG, "Harus kirim email");
-                        sendWarningEmail();
+//                        sendWarningEmail();
                     } else {
                         Log.d(TAG, "Not kirim email");
                     }
@@ -120,7 +120,7 @@ public class EmailBackgroundService extends Service {
 
     public void sendWarningEmail(){
         Log.d(TAG, "Masuk sendEmail");
-        BackgroundMail.newBuilder(this)
+        BackgroundMail.newBuilder(context)
             .withUsername("ifbukalock@gmail.com")
             .withPassword("bukalock135")
             .withMailto(this.useremail)
