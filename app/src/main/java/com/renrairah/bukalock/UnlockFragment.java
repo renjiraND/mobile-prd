@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.content.pm.PackageManager;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -124,7 +125,9 @@ public class UnlockFragment extends Fragment {
         gamesCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                PackageManager pm = getContext().getPackageManager();
+                Intent intent = pm.getLaunchIntentForPackage("com.renrairah.bukalabirin");
+                startActivity(intent);
             }
         });
         motionCardView.setOnClickListener(new View.OnClickListener() {
