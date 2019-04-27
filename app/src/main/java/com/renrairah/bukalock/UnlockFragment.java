@@ -1,11 +1,13 @@
 package com.renrairah.bukalock;
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,14 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +60,33 @@ public class UnlockFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_unlock, container, false);
+        final int[] status = new int[1];
+        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String email = currentUser.getEmail();
+        Query queryToGetData = dbRef.child("users")
+                .orderByChild("email").equalTo(email);
+        final ProgressDialog Dialog = new ProgressDialog(getActivity());
+        Dialog.setMessage("Please wait...");
+        Dialog.show();
+        queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    status[0] = 1;
+                } else {
+                    status[0] = 0;
+                }
+                Dialog.hide();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         gamesCardView = (CardView) rootView.findViewById(R.id.card_games);
         motionCardView = (CardView) rootView.findViewById(R.id.card_motion);
 
@@ -125,9 +162,18 @@ public class UnlockFragment extends Fragment {
         gamesCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PackageManager pm = getContext().getPackageManager();
-                Intent intent = pm.getLaunchIntentForPackage("com.renrairah.bukalabirin");
-                startActivity(intent);
+                if (status[0] == 1) {
+                    PackageManager pm = getContext().getPackageManager();
+                    Intent intent = pm.getLaunchIntentForPackage("com.renrairah.bukalabirin");
+                    startActivity(intent);
+                } else {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Sorry")
+                            .setMessage("You aren't eligible to unlock this door")
+                            .setNegativeButton("OK", null)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
             }
         });
         motionCardView.setOnClickListener(new View.OnClickListener() {
