@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
@@ -24,7 +25,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import static android.support.constraint.Constraints.TAG;
@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        final SharedPreferences mValid = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        final SharedPreferences.Editor editor = mValid.edit();
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -113,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void signOut() {
         // Firebase sign out
+        final SharedPreferences mValid = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences.Editor editor = mValid.edit();
+        editor.putInt("valid", 0);
+        editor.apply();
+
         mAuth.signOut();
 
         // Google sign out
