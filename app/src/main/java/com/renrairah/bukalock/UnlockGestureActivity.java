@@ -17,6 +17,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,10 +31,6 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -198,41 +195,24 @@ public class UnlockGestureActivity extends AppCompatActivity implements SensorEv
         float z = values[2];
 
         if ((y < -2.5f) && (status == 2)){
-            final ProgressDialog Dialog = new ProgressDialog(this);
-            Dialog.setMessage("Please wait...");
-            Dialog.show();
+            SharedPreferences mValid = PreferenceManager.getDefaultSharedPreferences(this);
             final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            String email = currentUser.getEmail();
-            Query queryToGetData = dbRef.child("users")
-                    .orderByChild("email").equalTo(email);
-            queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists()){
-                        String historyId = dbRef.child("history").push().getKey();
-                        History history = new History(1,System.currentTimeMillis(),1);
-                        dbRef.child("history").child(historyId).setValue(history);
-                        status = 3;
-                        txtStatus.setText("Door unlocked!");
-                        imgStatus.setImageResource(R.drawable.ic_unlock);
-                    } else {
-                        String historyId = dbRef.child("history").push().getKey();
-                        History history = new History(1,System.currentTimeMillis(),0);
-                        dbRef.child("history").child(historyId).setValue(history);
-                        status = 4;
-                        txtStatus.setText("You aren't eligible to unlock this door");
-                        imgStatus.setImageResource(R.drawable.ic_cancel);
-                    }
-                    Dialog.hide();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            int valid =  mValid.getInt("valid", 0);
+            if (valid == 1){
+                String historyId = dbRef.child("history").push().getKey();
+                History history = new History(1,System.currentTimeMillis(),1);
+                dbRef.child("history").child(historyId).setValue(history);
+                status = 3;
+                txtStatus.setText("Door unlocked!");
+                imgStatus.setImageResource(R.drawable.ic_unlock);
+            } else {
+                String historyId = dbRef.child("history").push().getKey();
+                History history = new History(1,System.currentTimeMillis(),0);
+                dbRef.child("history").child(historyId).setValue(history);
+                status = 4;
+                txtStatus.setText("You aren't eligible to unlock this door");
+                imgStatus.setImageResource(R.drawable.ic_cancel);
+            }
             sensorManager.unregisterListener(this);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));

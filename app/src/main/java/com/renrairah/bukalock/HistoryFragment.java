@@ -2,7 +2,9 @@ package com.renrairah.bukalock;
 
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -59,29 +61,11 @@ public class HistoryFragment extends Fragment {
         historyList = new LinkedList<>();
         adapter = new HistoryListAdapter(getActivity(), historyList);
         recyclerView.setAdapter(adapter);
-        final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String email = currentUser.getEmail();
-        Query queryToGetData = dbRef.child("users")
-                .orderByChild("email").equalTo(email);
-        final ProgressDialog Dialog = new ProgressDialog(getActivity());
-        Dialog.setMessage("Please wait...");
-        Dialog.show();
-        queryToGetData.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    createListData();
-                }
-                Dialog.hide();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        SharedPreferences mValid = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int status =  mValid.getInt("valid", 0);
+        if (status == 1){
+            createListData();
+        }
         // Inflate the layout for this fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
